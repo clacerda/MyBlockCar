@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 
 contract myBlockCar {
     //Owner cars
-    mapping(address => uint) private carProperty;
+    mapping(address => uint) public carProperty;
     //Struct of cars 
     struct Carro{
         string marca;
         string cor; 
-        uint8 aroRoda;
+        uint aroRoda;
         bool ligar;  
     }
     // create a list of cars
@@ -40,15 +40,17 @@ contract myBlockCar {
         carProperty[_addr] = _idCar;
     }
 
-    function returnOWner(address _addr) external view returns (uint){
-        return carProperty[_addr];
-    }
 
     //Returns a car
-    function returnCar(uint8 _idCar, address _addr ) external view returns (Carro memory) {
+    function returnCar(uint _idCar) external view returns (Carro memory) {
        
         return carros[_idCar];
     }
+
+    //Start a car
+    // function onOffCar() external(Carro memory){
+
+    // }
 
 
   
