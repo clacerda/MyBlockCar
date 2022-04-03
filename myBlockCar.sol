@@ -4,13 +4,16 @@ pragma solidity ^0.8.0;
 
 contract myBlockCar {
     //Owner cars
-    mapping(address => uint) public carProperty;
+    //mapping(address => uint) public carProperty;
+
     //Struct of cars 
     struct Carro{
         string marca;
         string cor; 
         uint aroRoda;
-        bool ligar;  
+        bool ligar;
+        uint256 idCar;
+        address owner;
     }
     // create a list of cars
     Carro[] carros;
@@ -22,22 +25,19 @@ contract myBlockCar {
         novoCarro.marca = _marca;
         novoCarro.cor = _cor;
         novoCarro.aroRoda = _aroRoda;
-        novoCarro.ligar = _ligar; 
-
+        novoCarro.ligar = _ligar;
+        novoCarro.idCar = carros.length;
+        novoCarro.owner = msg.sender;
         carros.push(novoCarro);
     }
 
-    //Create a cars owner
-    function createOwnerCar(address _addr, uint _idCar) external{
-         
-        carProperty[_addr] = _idCar;
-    }
+  
 
     //Change a cars owner
-    function changeOwnerCar(address _addr, uint _idCar) external {
+    function changeOwnerCar(address _addr ) external {
         require(msg.sender == _addr);
  
-        carProperty[_addr] = _idCar;
+        carros[_addr] = _addr;
     }
 
 
@@ -47,11 +47,12 @@ contract myBlockCar {
         return carros[_idCar];
     }
 
-    //Start a car
-    // function onOffCar() external(Carro memory){
+ 
+    function ligarCarro(address _addr) external {
+        require(msg.sender == _addr);
 
-    // }
 
+    }
 
   
 }
