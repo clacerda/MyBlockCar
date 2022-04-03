@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 contract myBlockCar {
     //Owner cars
-    //mapping(address => uint) public carProperty;
+     mapping(address => Carro) public carProperty;
 
     //Struct of cars 
     struct Carro{
@@ -13,7 +13,7 @@ contract myBlockCar {
         uint aroRoda;
         bool ligar;
         uint256 idCar;
-        address owner;
+        //address owner;
     }
     // create a list of cars
     Carro[] carros;
@@ -27,19 +27,21 @@ contract myBlockCar {
         novoCarro.aroRoda = _aroRoda;
         novoCarro.ligar = _ligar;
         novoCarro.idCar = carros.length;
-        novoCarro.owner = msg.sender;
+        //novoCarro.owner = msg.sender;
         carros.push(novoCarro);
     }
 
-  
-
-    //Change a cars owner
-    function changeOwnerCar(address _addr ) external {
-        require(msg.sender == _addr);
- 
-        carros[_addr] = _addr;
+    //Returns a list of cars
+    function ListCars() external view returns (Carro[] memory) { 
+        
+        return carros;
     }
 
+    //Change a cars owner // function changeOwnerCar(address _addr, uint _id, address _to) external view returns (Carro memory) {
+    //      carProperty[_addr] =  
+    // }
+
+   
 
     //Returns a car
     function returnCar(uint _idCar) external view returns (Carro memory) {
@@ -51,7 +53,7 @@ contract myBlockCar {
     function ligarCarro(address _addr) external {
         require(msg.sender == _addr);
 
-
+        
     }
 
   
