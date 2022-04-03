@@ -52,19 +52,23 @@ contract myBlockCar {
     }
 
  
-    function ligarCarro(address _addr) external {
+    function ligarCarro(address _addr) external   returns (Carro memory) {
         //require(msg.sender == _addr, "Thief! You can not leave this car!");
-        require(carProperty[_addr].tanque < 10, "OMG, I think your fuel empity!");
+        //require(carProperty[_addr].tanque < 10, "OMG, I think your fuel empity!");
         
         carProperty[_addr].ligar = true;
         carProperty[_addr].tanque - 10;
+
+        return carProperty[_addr];
     }
 
-    function desligarCarro(address _addr) external {
+    function desligarCarro(address _addr) public   returns (Carro memory){
         //require(msg.sender == _addr, "Thief! You can not leave this car!");
         
         carProperty[_addr].ligar = false;
         carProperty[_addr].tanque - 1;
+
+        return carProperty[_addr];
     }
 
   
