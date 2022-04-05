@@ -9,11 +9,13 @@ contract myBlockCar {
     struct Carro{
         string marca;
         string cor; 
-        uint8 aroRoda;
+        uint32 aroRoda;
         bool ligar;
         uint256 idCar;
-        uint8 tanque;
+        address owner;
+        uint32 tanque;
         //address owner;
+        
     }
 
     //Owner cars
@@ -31,7 +33,7 @@ contract myBlockCar {
         novoCarro.aroRoda = _aroRoda;
         novoCarro.ligar = false;
         novoCarro.idCar = carros.length;
-        //novoCarro.owner = msg.sender;
+        novoCarro.owner = msg.sender;
         novoCarro.tanque = 100;
         carros.push(novoCarro);
 
@@ -53,8 +55,8 @@ contract myBlockCar {
 
  
     function ligarCarro(address _addr) external   returns (Carro memory) {
-        //require(msg.sender == _addr, "Thief! You can not leave this car!");
-        //require(carProperty[_addr].tanque < 10, "OMG, I think your fuel empity!");
+        require(carProperty[msg.sender].owner == _addr, "Thief! You can not leave this car!");
+        
         
         carProperty[_addr].ligar = true;
         carProperty[_addr].tanque = carProperty[_addr].tanque  - 10;
@@ -63,7 +65,7 @@ contract myBlockCar {
     }
 
     function desligarCarro(address _addr) external   returns (Carro memory){
-        //require(msg.sender == _addr, "Thief! You can not leave this car!");
+        require(carProperty[msg.sender].owner == _addr, "Thief! You can not leave this car!");
         
         carProperty[_addr].ligar = false;
         carProperty[_addr].tanque = carProperty[_addr].tanque  - 5;
@@ -75,11 +77,10 @@ contract myBlockCar {
         return carProperty[_addr].tanque;
     }
 
-    // function getIdCarro(address _addr) internal returns (uint256) {
-    //     uint256 id = carProperty[_addr].idCar;
-
-    //     return id;
-    // }
+    modifier checaGasolina(uint32 litro){
+        require(uint32(carProperty[msg.sender].tanque) < litro, "OMG, I think your fuel empity!");
+        _;
+    }
 
   
 }
