@@ -54,23 +54,21 @@ contract myBlockCar {
     }
 
  
-    function ligarCarro(address _addr) external   returns (Carro memory) {
+    function ligarCarro(address _addr) public  checaGasolina(carProperty[msg.sender].tanque) {
         require(carProperty[msg.sender].owner == _addr, "Thief! You can not leave this car!");
         
         
         carProperty[_addr].ligar = true;
         carProperty[_addr].tanque = carProperty[_addr].tanque  - 10;
-
-        return carProperty[_addr];
+ 
     }
 
-    function desligarCarro(address _addr) external   returns (Carro memory){
+    function desligarCarro(address _addr) public  checaGasolina(carProperty[msg.sender].tanque){
         require(carProperty[msg.sender].owner == _addr, "Thief! You can not leave this car!");
         
         carProperty[_addr].ligar = false;
         carProperty[_addr].tanque = carProperty[_addr].tanque  - 5;
-
-        return carProperty[_addr];
+ 
     }
 
     function verificaTanque(address _addr) public view returns (uint32){
@@ -78,7 +76,7 @@ contract myBlockCar {
     }
 
     modifier checaGasolina(uint32 litro){
-        require(uint32(carProperty[msg.sender].tanque) < litro, "OMG, I think your fuel empity!");
+        require(10 < litro, "OMG, I think your fuel empity!");
         _;
     }
 
