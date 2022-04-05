@@ -9,10 +9,10 @@ contract myBlockCar {
     struct Carro{
         string marca;
         string cor; 
-        uint aroRoda;
+        uint8 aroRoda;
         bool ligar;
         uint256 idCar;
-        uint32 tanque;
+        uint8 tanque;
         //address owner;
     }
 
@@ -57,19 +57,29 @@ contract myBlockCar {
         //require(carProperty[_addr].tanque < 10, "OMG, I think your fuel empity!");
         
         carProperty[_addr].ligar = true;
-        carProperty[_addr].tanque - 10;
+        carProperty[_addr].tanque = carProperty[_addr].tanque  - 10;
 
         return carProperty[_addr];
     }
 
-    function desligarCarro(address _addr) public   returns (Carro memory){
+    function desligarCarro(address _addr) external   returns (Carro memory){
         //require(msg.sender == _addr, "Thief! You can not leave this car!");
         
         carProperty[_addr].ligar = false;
-        carProperty[_addr].tanque - 1;
+        carProperty[_addr].tanque = carProperty[_addr].tanque  - 5;
 
         return carProperty[_addr];
     }
+
+    function verificaTanque(address _addr) public view returns (uint32){
+        return carProperty[_addr].tanque;
+    }
+
+    // function getIdCarro(address _addr) internal returns (uint256) {
+    //     uint256 id = carProperty[_addr].idCar;
+
+    //     return id;
+    // }
 
   
 }
