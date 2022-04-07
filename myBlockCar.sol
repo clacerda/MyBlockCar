@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-contract myBlockCar {
+contract myBlockCarCreate {
     
 
     //Struct of cars 
@@ -14,8 +14,8 @@ contract myBlockCar {
         uint256 idCar;
         address owner;
         uint32 tanque;
-        //address owner;
-        
+        uint valorVendaCarro;
+                
     }
 
     //Owner cars
@@ -25,7 +25,7 @@ contract myBlockCar {
     Carro[] carros;
 
     //Function for creation of new car
-    function createCar(string memory _marca, string memory _cor, uint8 _aroRoda) external {
+    function createCar(string memory _marca, string memory _cor, uint8 _aroRoda, uint _valorVendaCarro) external {
         Carro memory novoCarro; 
 
         novoCarro.marca = _marca;
@@ -35,12 +35,16 @@ contract myBlockCar {
         novoCarro.idCar = carros.length;
         novoCarro.owner = msg.sender;
         novoCarro.tanque = 100;
+        novoCarro.valorVendaCarro = _valorVendaCarro;
         carros.push(novoCarro);
 
         carProperty[msg.sender] = novoCarro;
     }
+  
+}
 
-    //Returns a list of cars
+contract myBlockCarChange is myBlockCarCreate {
+        //Returns a list of cars
     function ListCars() external view returns (Carro[] memory) { 
         
         return carros;
@@ -79,6 +83,4 @@ contract myBlockCar {
         require(10 < litro, "OMG, I think your fuel empity!");
         _;
     }
-
-  
 }
