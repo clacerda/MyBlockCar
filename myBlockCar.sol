@@ -13,7 +13,7 @@ contract myBlockCarCreate {
         uint256 idCar;
         address owner;
         uint32 tanque;
-        uint valorVendaCarro;
+        uint256 valorVendaCarro;
         bool aVenda;
     }
 
@@ -84,13 +84,18 @@ contract myBlockCarChange is myBlockCarCreate {
     }
 
   
-    function ComprarCarro(uint256 _idCar, address payable _to) public payable checarTermosVenda(_idCar) {
-       require(carProperty[_idCar].owner == msg.sender, "Thief! You can not leave this car!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    function ComprarCarro(uint256 _idCar, address payable _to) public payable checarTermosVenda(_idCar) { 
+
         //transfere o dinheiro ao vendedor
         _to.transfer(msg.value);
         //transfere o carro ao novo dono
         carProperty[_idCar].owner = msg.sender;
         
+    }
+
+    function venderCarro(uint256 _idCar, uint256 _val) internal {
+        carProperty[_idCar].aVenda = true;
+        carProperty[_idCar].valorVendaCarro = _val;
     }
     
     modifier checarTermosVenda(uint256 _idCar){
