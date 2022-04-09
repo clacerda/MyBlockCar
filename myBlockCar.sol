@@ -19,26 +19,36 @@ contract myBlockCarCreate {
 
     //Owner cars
     mapping(address => Carro) internal carProperty;
+    
 
     // create a list of cars
     Carro[] carros;
 
     //Function for creation of new car
-    function createCar(string memory _marca, string memory _cor, uint8 _aroRoda, uint _valorVendaCarro) external {
+    function createCar(string memory _marca, string memory _cor, uint8 _aroRoda, address _address, uint _valorVendaCarro) external {
         Carro memory novoCarro; 
 
         novoCarro.marca = _marca;
         novoCarro.cor = _cor;
         novoCarro.aroRoda = _aroRoda;
         novoCarro.ligar = false;
-        novoCarro.idCar = carros.length;
-        novoCarro.owner = msg.sender;
+        novoCarro.idCar = getIdentityCar();
+        novoCarro.owner = _address != address(0x0) ?  _address : msg.sender;
         novoCarro.tanque = 100;
         novoCarro.valorVendaCarro = _valorVendaCarro;
         novoCarro.aVenda = false;
         carros.push(novoCarro);
 
         carProperty[msg.sender] = novoCarro;
+    }
+
+     function getIdentityCar() internal returns (uint256){
+        uint256 getIdentity = 0;
+        for(uint256 i; i <= carros.length; i++){
+            getIdentity += 1;
+        }
+
+        return getIdentity; 
     }
   
 }
