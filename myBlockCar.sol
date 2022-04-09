@@ -94,6 +94,8 @@ contract myBlockCarChange is myBlockCarCreate {
     }
 
     function venderCarro(uint256 _idCar, uint256 _val) internal {
+        require(carProperty[_idCar].owner == msg.sender, "You don't put this car on sale!!!!!!!");
+        
         carProperty[_idCar].aVenda = true;
         carProperty[_idCar].valorVendaCarro = _val;
     }
