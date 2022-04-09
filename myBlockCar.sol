@@ -18,34 +18,33 @@ contract myBlockCarCreate {
     }
 
     //Owner cars
-    mapping(address => Carro) internal carProperty;
-    
-
+    mapping(uint256 => Carro) public carProperty;
+ 
     // create a list of cars
     Carro[] carros;
 
     //Function for creation of new car
-    function createCar(string memory _marca, string memory _cor, uint8 _aroRoda, address _address, uint _valorVendaCarro) external {
+    function createCar(string memory _marca, string memory _cor, uint32 _aroRoda, uint _valorVendaCarro) public {
         Carro memory novoCarro; 
-
+ 
         novoCarro.marca = _marca;
         novoCarro.cor = _cor;
         novoCarro.aroRoda = _aroRoda;
         novoCarro.ligar = false;
         novoCarro.idCar = getIdentityCar();
-        novoCarro.owner = _address != address(0x0) ?  _address : msg.sender;
+        novoCarro.owner = msg.sender ;
         novoCarro.tanque = 100;
         novoCarro.valorVendaCarro = _valorVendaCarro;
         novoCarro.aVenda = false;
         carros.push(novoCarro);
 
-        carProperty[msg.sender] = novoCarro;
+        carProperty[getIdentityCar()] = novoCarro;
     }
 
      function getIdentityCar() internal returns (uint256){
         uint256 getIdentity = 0;
-        for(uint256 i; i <= carros.length; i++){
-            getIdentity += 1;
+        for(uint256 i = 0; i < carros.length; i++){
+            getIdentity ++;
         }
 
         return getIdentity; 
@@ -54,7 +53,7 @@ contract myBlockCarCreate {
 }
 
 contract myBlockCarChange is myBlockCarCreate {
-        //Returns a list of cars
+    //Returns a list of cars
     function ListCars() external view returns (Carro[] memory) { 
         
         return carros;
@@ -65,43 +64,41 @@ contract myBlockCarChange is myBlockCarCreate {
        
         return carros[_idCar];
     }
- 
-    function ligarCarro(address _addr) public  checaGasolina(carProperty[msg.sender].tanque) {
-        require(carProperty[msg.sender].owner == _addr, "Thief! You can not leave this car!");
-        
-        
-        carProperty[_addr].ligar = true;
-        carProperty[_addr].tanque = carProperty[_addr].tanque  - 10;
- 
-    }
 
-    function desligarCarro(address _addr) public  checaGasolina(carProperty[msg.sender].tanque){
-        require(carProperty[msg.sender].owner == _addr, "Thief! You can not leave this car!");
+ 
+    function ligarCarro(uint256 _idCar) public checaGasolina(carProperty[_idCar].tanque){
+       require(carProperty[_idCar].owner == msg.sender, "Thief! You can not leave this car!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         
-        carProperty[_addr].ligar = false;
-        carProperty[_addr].tanque = carProperty[_addr].tanque  - 5;
+        
+        carProperty[_idCar].ligar = true;
+        carProperty[_idCar].tanque = carProperty[_idCar].tanque  - 10;
  
     }
 
-    function verificaTanque(address _addr) public view returns (uint32){
-        return carProperty[_addr].tanque;
+    function desligarCarro(uint256 _idCar) public  checaGasolina(carProperty[_idCar].tanque){
+        require(carProperty[_idCar].owner == msg.sender, "Thief! You can not leave this car!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        
+        carProperty[_idCar].ligar = false;
+        carProperty[_idCar].tanque = carProperty[_idCar].tanque  - 5;
+ 
     }
 
-    function venderCarro(address _addr, uint256 _idCar) public payable  {
-        require(carProperty[_addr].idCar == _idCar && carProperty[_addr].aVenda == false, "this car is not for sale");
-        require(carProperty[_addr].valorVendaCarro <= msg.value, "insufficient value");
+  
+    function ComprarCarro(uint256 _idCar, address payable _to) public payable checarTermosVenda(_idCar) {
+       require(carProperty[_idCar].owner == msg.sender, "Thief! You can not leave this car!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        //transfere o dinheiro ao vendedor
+        _to.transfer(msg.value);
+        //transfere o carro ao novo dono
+        carProperty[_idCar].owner = msg.sender;
+        
+    }
     
-    }
-    
-    function enviaPagamento(address payable recebedor) public payable{
-        recebedor.transfer(msg.value);
+    modifier checarTermosVenda(uint256 _idCar){
+        require(carProperty[_idCar].aVenda == false, "This car isn't a sale!");
+        _;
     }
 
-    // modifier checaSeAVenda(address _addr, uint _idCar){
-    //     require(carProperty[_addr].idCar == _idCar && carProperty[_addr].aVenda == false, "this car is not for sale");
-    //     _;
-    // }
-
+   
     modifier checaGasolina(uint32 litro){
         require(10 < litro, "OMG, I think your fuel empity!");
         _;
